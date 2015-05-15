@@ -1,0 +1,8 @@
+-- This is the first file the computer will go to when starting the Operating System
+-- All this does is prevent the welcome message from being repeated.
+print("Welcome to DanetOS Ver.1.0 [by Rusettsten]")
+print("")
+shell.run("DanetOS")
+print("Unexpected Error... Shutting Down...")
+os.sleep("3")
+shell.run("shutdown")
