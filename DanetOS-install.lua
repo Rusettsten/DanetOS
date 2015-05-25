@@ -1,0 +1,15 @@
+--This program makes installation of Danet Easier
+
+print("Thanks for downloading! Starting in 3...")
+os.sleep(1)
+print("2...")
+os.sleep(1)
+print("1...")
+os.sleep(1)
+print("Go!")
+shell.run("delete startup")
+shell.run("pastebin get dRYwHTeK startup")
+shell.run("pastebin get z5pvrwYC DanetOS-Startup")
+shell.run("pastebin get MbBP4hds DanetOS")
+shell.run("pastebin get 34kEtVvg Uninstall")
+shell.run("reboot")
