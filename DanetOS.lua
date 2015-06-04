@@ -46,8 +46,15 @@ print("Enter message/command:")
 message = read()
 rednet.send(id,message)
 rednet.close("back")
+
+--Records Message for Tampering Evidence
+local day = os.day()
+local curTime = os.time()
+local histWrite = fs.open("DanetHist/D-" .. day .. "-" .. curTime)
+file.writeLine("ID:" .. id .. " Message:" .. message)
+file.close()
+
 print("Success!")
-print("")
 end
 if command == "danet-p" then
 --This is the exact same as Danet, except it allows for the communication of a password and verification with a server before it can be completed
@@ -66,6 +73,13 @@ print("Verification Sucessful!")
 print("Enter Command:")
 local message = read()
 rednet.send(id, message)
+
+--Records Message for Tampering Evidence
+local day = os.day()
+local curTime = os.time()
+local histWrite = fs.open("DanetHist/DP-" .. day .. "-" .. curTime)
+file.writeLine("ID:" .. id .. " Message:" .. message)
+file.close()
 end
 if verify == "false" then
 print("")
@@ -90,13 +104,21 @@ print("Enter Command:")
 reactCom = read()
 string.lower(reactCom)
 rednet.send(compID, reactCom)
+
+--Records Message for Tampering Evidence
+local day = os.day()
+local curTime = os.time()
+local histWrite = fs.open("DanetHist/DRServ-" .. day .. "-" .. curTime)
+file.writeLine("ID:" .. compID .. " Message:" .. reactCom)
+file.close()
+
 if reactCom == "fuelreact" or "fuelmax" or "fueltemp" or "fuellevel" or "casingtemp" or "energystored" then
 reactID2,reactResp = rednet.receive(20)
 print(reactResp)
 end
+end
 if reactVerify == "false" then
 print("Verification Failed.")
-end
 end
 end
 if command == "programs" then
@@ -228,5 +250,10 @@ if ycolor == "black" then
 term.setTextColor(colors.black)
 end
 print("Color Set!")
+end
+if command == "paint" then
+	print("Enter name of paint file:")
+	paintFile = read()
+	shell.run("paint " .. paintFile)
 end
 shell.run("DanetOS")
