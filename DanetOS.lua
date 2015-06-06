@@ -1,6 +1,6 @@
 -- DANET OS VER. 1-BACK MODEM, Written by Rusettsten
 -- Installation Notes: Install Corresponding Programs in the Folder onto the device before installing this program
-
+repeat
 print("Enter Command:")
 local command = read()
 string.lower(command)
@@ -50,9 +50,9 @@ rednet.close("back")
 --Records Message for Tampering Evidence
 local day = os.day()
 local curTime = os.time()
-local histWrite = fs.open("DanetHist/D-" .. day .. "-" .. curTime)
-file.writeLine("ID:" .. id .. " Message:" .. message)
-file.close()
+local histWrite = fs.open("DanetHist/D-" .. day .. "-" .. curTime, "w")
+histWrite.writeLine("ID:" .. id .. " Message:" .. message)
+histWrite.close()
 
 print("Success!")
 end
@@ -77,9 +77,9 @@ rednet.send(id, message)
 --Records Message for Tampering Evidence
 local day = os.day()
 local curTime = os.time()
-local histWrite = fs.open("DanetHist/DP-" .. day .. "-" .. curTime)
-file.writeLine("ID:" .. id .. " Message:" .. message)
-file.close()
+local histWrite = fs.open("DanetHist/DP-" .. day .. "-" .. curTime, "w")
+histWrite.writeLine("ID:" .. id .. " Message:" .. message)
+histWrite.close()
 end
 if verify == "false" then
 print("")
@@ -108,12 +108,12 @@ rednet.send(compID, reactCom)
 --Records Message for Tampering Evidence
 local day = os.day()
 local curTime = os.time()
-local histWrite = fs.open("DanetHist/DRServ-" .. day .. "-" .. curTime)
-file.writeLine("ID:" .. compID .. " Message:" .. reactCom)
-file.close()
+local histWrite = fs.open("DanetHist/DRServ-" .. day .. "-" .. curTime, "w")
+histWrite.writeLine("ID:" .. compID .. " Message:" .. reactCom)
+histWrite.close()
 
 if reactCom == "fuelreact" or "fuelmax" or "fueltemp" or "fuellevel" or "casingtemp" or "energystored" then
-reactID2,reactResp = rednet.receive(20)
+reactID2,reactResp = rednet.receive(5)
 print(reactResp)
 end
 end
@@ -256,4 +256,51 @@ if command == "paint" then
 	paintFile = read()
 	shell.run("paint " .. paintFile)
 end
+if command == "histlist" then
+	shell.run("clear")
+	shell.run("list DanetHist")
+end
+if command == "histview" then
+	print("Enter History Log File:")
+	histName = read()
+	histFile = fs.open("DanetHist/" .. histName,"r")
+	histRead = histFile.readAll()
+	histFile.close()
+	print(histRead)
+end
+if command == "word" then
+	shell.run("clear")
+	print("DanetWord Version 1.0![Local Print]")
+	print("Enter document savename.")
+	local wordSaveName = read()
+	local wordFile = fs.open("DanetWord/DOC-" .. wordSaveName, "w")
+	print("Would you like this document dated with the current in-game time? Y/N")
+	local yorn = read()
+	string.lower(yorn)
+		if yorn == "y" then
+		local day = os.day()
+		local curTime = os.time()
+		wordFile.writeLine("Day: " .. day .. " Time: " .. curTime)
+		end
+	print("Enter text:")
+	local wordText = read()
+	print("Enter starting print spacing")
+	local wordSkip = tonumber(read())
+	wordFile.writeLine(wordText)
+	wordFile.close()
+	print("Printing to left peripheral printer...")
+	local printer = peripheral.wrap("left")
+	printer.newPage()
+	local printFile = fs.open("DanetWord/DOC-" .. wordSaveName, "r")
+		repeat
+		local printLine = printFile.readLine()
+		printer.write(printLine)
+		printer.setCursorPos(1,wordSkip)
+		wordSkip = (wordSkip + 1)
+		until not line
+	printFile.close()
+	printer.endPage()
+end	
+until command == "rickroll"
+print("Sorry, that feature hasn't been implemented yet.")
 shell.run("DanetOS")
