@@ -300,7 +300,10 @@ if command == "word" then
 		until not line
 	printFile.close()
 	printer.endPage()
-end	
+end
+if command == "update" then
+	shell.run("Update")
+end
 until command == "rickroll"
 print("Sorry, that feature hasn't been implemented yet.")
 shell.run("DanetOS")
